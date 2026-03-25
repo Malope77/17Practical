@@ -173,6 +173,43 @@ public class binarySearch {
                 }
                 return Math.sqrt(sum / times.size());
             }
+             public static void runExperiments(int n, int repetitions) {
+                BinarySearchTree bst = new BinarySearchTree();
+                List<Long> populateTimes = new ArrayList<>();
+                List<Long> removeTimes = new ArrayList<>();
+
+                System.out.println("Running experiments with n = " + n + " (total nodes: " + ((int) Math.pow(2, n) - 1) + ")");
+                System.out.println("Repetitions: " + repetitions);
+                System.out.println();
+
+                for (int i = 0; i < repetitions; i++) {
+                    // Time population
+                    long startPopulate = System.nanoTime();
+                    buildBalancedBST(bst, 1, (int) Math.pow(2, n) - 1);
+                    long endPopulate = System.nanoTime();
+                    long populateTime = (endPopulate - startPopulate) / 1_000_000; // Convert to milliseconds
+                    populateTimes.add(populateTime);
+
+                    // Verify BST property
+                    if (!bst.isBST()) {
+                        System.out.println("Warning: Tree is not a valid BST at iteration " + (i + 1));
+                    }
+
+                    // Time removal of even numbers
+                    long startRemove = System.nanoTime();
+                    bst.removeEvens();
+                    long endRemove = System.nanoTime();
+                    long removeTime = (endRemove - startRemove) / 1_000_000; // Convert to milliseconds
+                    removeTimes.add(removeTime);
+
+                    // Clear tree for next iteration
+                    bst.clear();
+
+                    // Progress indicator
+                    if ((i + 1) % 10 == 0) {
+                        System.out.println("Completed " + (i + 1) + " iterations...");
+                    }
+                }
     
                 
                 
