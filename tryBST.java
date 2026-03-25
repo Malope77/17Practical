@@ -78,3 +78,27 @@ public class binarySearch {
                 if (node == null) {
                     return null;
                 }
+                                node.left = removeEvensRec(node.left);
+                node.right = removeEvensRec(node.right);
+
+                // If current node's data is even, remove it
+                if (node.data % 2 == 0) {
+                    return deleteNode(node);
+                }
+
+                return node;
+            }
+
+            private nNode deleteNode(nNode node) {
+                // Case 1: No children
+                if (node.left == null && node.right == null) {
+                    return null;
+                }
+
+                // Case 2: One child
+                if (node.left == null) {
+                    return node.right;
+                }
+                if (node.right == null) {
+                    return node.left;
+                }
