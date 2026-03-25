@@ -144,7 +144,6 @@ public class binarySearch {
                 nodeCount = 0;
             }
 
-            // Build balanced BST by inserting middle element recursively
             public static void buildBalancedBST(BinarySearchTree bst, int start, int end) {
                 if (start > end) {
                     return;
@@ -165,7 +164,7 @@ public class binarySearch {
                 return numbers;
             }
 
-            // Calculate standard deviation
+            
             public static double calculateStdDev(List<Long> times, double mean) {
                 double sum = 0.0;
                 for (long time : times) {
@@ -183,33 +182,90 @@ public class binarySearch {
                 System.out.println();
 
                 for (int i = 0; i < repetitions; i++) {
-                    // Time population
+                   
                     long startPopulate = System.nanoTime();
                     buildBalancedBST(bst, 1, (int) Math.pow(2, n) - 1);
                     long endPopulate = System.nanoTime();
                     long populateTime = (endPopulate - startPopulate) / 1_000_000; // Convert to milliseconds
                     populateTimes.add(populateTime);
 
-                    // Verify BST property
+                   
                     if (!bst.isBST()) {
                         System.out.println("Warning: Tree is not a valid BST at iteration " + (i + 1));
                     }
 
-                    // Time removal of even numbers
+                   s
                     long startRemove = System.nanoTime();
                     bst.removeEvens();
                     long endRemove = System.nanoTime();
                     long removeTime = (endRemove - startRemove) / 1_000_000; // Convert to milliseconds
                     removeTimes.add(removeTime);
 
-                    // Clear tree for next iteration
+                   
                     bst.clear();
 
-                    // Progress indicator
+                
                     if ((i + 1) % 10 == 0) {
                         System.out.println("Completed " + (i + 1) + " iterations...");
                     }
                 }
+
+                 double populateMean = populateTimes.stream().mapToLong(Long::longValue).average().orElse(0.0);
+                double removeMean = removeTimes.stream().mapToLong(Long::longValue).average().orElse(0.0);
+                double populateStdDev = calculateStdDev(populateTimes, populateMean);
+                double removeStdDev = calculateStdDev(removeTimes, removeMean);
+
+                
+                System.out.println("\n" + "=".repeat(80));
+                System.out.printf("%-20s %-15s %-20s %-20s%n", "Method", "Number of keys n", "Average time (ms)", "Standard Deviation");
+                System.out.println("=".repeat(80));
+                System.out.printf("%-20s %-15d %-20.2f %-20.2f%n", "Populate tree", (int) Math.pow(2, n) - 1, populateMean, populateStdDev);
+                System.out.printf("%-20s %-15d %-20.2f %-20.2f%n", "Remove evens", (int) Math.pow(2, n) - 1, removeMean, removeStdDev);
+                System.out.println("=".repeat(80));
+
+            
+                if (populateMean < 1000 && removeMean < 1000) {
+                    System.out.println("\nNote: Average times are less than 1000ms. Consider increasing n for better timing results.");
+                }
+            }
+
+            public static void main(String[] args) {
+                System.out.println("Binary Search Tree Timing Analysis");
+                System.out.println("===================================");
+                System.out.println();
+
+                
+                System.out.println("Testing with small n (n=3) to verify BST property...");
+                BinarySearchTree testTree = new BinarySearchTree();
+                buildBalancedBST(testTree, 1, 7); // 2^3 - 1 = 7
+                System.out.println("Tree is BST: " + testTree.isBST());
+                System.out.println("Number of nodes: " + testTree.getNodeCount());
+                System.out.println();
+
+                
+                int repetitions = 30;
+
+               
+                System.out.println("Testing with n=15...");
+                runExperiments(15, repetitions);
+                System.out.println("\n");
+
+                // Try n=17 (131,071 nodes)
+                System.out.println("Testing with n=17...");
+                runExperiments(17, repetitions);
+                System.out.println("\n");
+
+                
+                System.out.println("Testing with n=20...");
+                runExperiments(20, repetitions);
+
+                System.out.println("\n" + "=".repeat(80));
+                System.out.println("Analysis Complete!");
+                System.out.println("Note: The tree construction uses a balanced BST approach");
+                System.out.println("where numbers are inserted in breadth-first order to ensure perfect balance.");
+            }
+        }
+
     
                 
                 
