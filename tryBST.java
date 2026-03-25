@@ -102,3 +102,77 @@ public class binarySearch {
                 if (node.right == null) {
                     return node.left;
                 }
+
+                nNode successor = findMin(node.right);
+                node.data = successor.data;
+                node.right = deleteNodeRec(node.right, successor.data);
+
+                return node;
+
+            }
+
+            private nNode deleteNodeRec(nNode node, int value) {
+                if (node == null ) {
+                    return null;
+                }
+
+                if ( value < node.data) {
+                    node.left = deleteNodeRec(node.left, value );
+                } else if (value > node.data) {
+                    node.right = deleteNodeRec(node.right, value);
+                } else {
+                    return deleteNode(node);
+                }
+
+                return node;
+            }
+
+            private nNode findMin(nNode node) {
+                while (node.left != null) {
+                    node = node.left;
+                }
+                return node;
+            }
+
+            public int getNodeCount() {
+                return nodeCount;
+            }
+
+        
+            public void clear() {
+                root = null;
+                nodeCount = 0;
+            }
+
+            // Build balanced BST by inserting middle element recursively
+            public static void buildBalancedBST(BinarySearchTree bst, int start, int end) {
+                if (start > end) {
+                    return;
+                }
+
+                int middle = start + (end - start) / 2;
+                bst.insert(middle);
+
+                buildBalancedBST(bst, start, middle - 1);
+                buildBalancedBST(bst, middle + 1, end);
+            }
+            public static List<Integer> generateNumbers(int n) {
+                List<Integer> numbers = new ArrayList<>();
+                int max = (int) Math.pow(2, n) - 1;
+                for (int i = 1; i <= max; i++) {
+                    numbers.add(i);
+                }
+                return numbers;
+            }
+
+            // Calculate standard deviation
+            public static double calculateStdDev(List<Long> times, double mean) {
+                double sum = 0.0;
+                for (long time : times) {
+                    sum += Math.pow(time - mean, 2);
+                }
+                return Math.sqrt(sum / times.size());
+            }
+    
+                
+                
